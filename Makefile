@@ -56,21 +56,8 @@ master:
 	erl -pa */ebin -pa ebin -pa test_ebin -boot_service num_services 3 -boot_service services orchistrate_serviceXcatalog_serviceXiaas_service -s boot_service_tests start -sname master_boot_test
 worker:
 	rm -rf *_service include ebin/* test_ebin/* test_src/*~ src/*~ erl_crasch.dump;
-#	orchistrate_service
-	cp -r /home/pi/erlang/erl_infra/orchistrate_service .;
-	cp /home/pi/erlang/erl_infra/orchistrate_service/src/*.app orchistrate_service/ebin;
-	erlc -I /home/pi/erlang/erl_infra/include -o orchistrate_service/ebin orchistrate_service/src/*.erl;
-#	iaas_service
-	cp -r /home/pi/erlang/erl_infra/iaas_service .;
-	cp /home/pi/erlang/erl_infra/iaas_service/src/*.app iaas_service/ebin;
-	erlc -I /home/pi/erlang/erl_infra/include -o iaas_service/ebin iaas_service/src/*.erl;
-#	catalog_service
-	cp -r /home/pi/erlang/erl_infra/catalog_service .;
-	cp /home/pi/erlang/erl_infra/catalog_service/src/*.app catalog_service/ebin;
-	erlc -I /home/pi/erlang/erl_infra/include -o catalog_service/ebin catalog_service/src/*.erl;
-#	boot_service
 	cp src/*.app ebin;
-	erlc -I ../include -o ebin src/*.erl;	
+	erlc -o ebin src/*.erl;	
 #	test
-	erlc -D worker -I /home/pi/erlang/erl_infra/include -o test_ebin test_src/*.erl;
+	erlc -D worker -o test_ebin test_src/*.erl;
 	erl -pa */ebin -pa ebin -pa test_ebin -s boot_service_tests start -sname worker_boot_test

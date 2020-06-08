@@ -35,7 +35,10 @@
 
 
 %% server interface
--export([boot/0,get_config/0	 
+-export([boot/0,
+	 start_service/1,
+	 stop_service/1,
+	 get_config/0	 
 	]).
 
 
@@ -83,7 +86,12 @@ ping()->
 get_config()->
     gen_server:call(?MODULE,{get_config},infinity).
 
+start_service(ServiceId)->    
+    gen_server:call(?MODULE,{start_service,ServiceId},infinity).
+stop_service(ServiceId)->    
+    gen_server:call(?MODULE,{stop_service,ServiceId},infinity).
 
+    
 %%___________________________________________________________________
 
 
@@ -126,6 +134,14 @@ init([]) ->
 %%          {stop, Reason, Reply, State}   | (terminate/2 is called)
 %%          {stop, Reason, State}            (aterminate/2 is called)
 %% --------------------------------------------------------------------
+handle_call({start_service,ServiceId}, _From, State) ->
+    Reply=loader:start(ServiceId),
+    {reply, Reply, State};
+handle_call({stop_service,ServiceId}, _From, State) ->
+    Reply=loader:stop(ServiceId),
+    {reply, Reply, State};
+
+
 handle_call({ping}, _From, State) ->
     Reply={pong,node(),?MODULE},
     {reply, Reply, State};

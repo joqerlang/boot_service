@@ -2,7 +2,7 @@
 %%% Author  : uabjle
 %%% Description : dbase using dets 
 %%% 
-%%% Created : 10 dec 2012
+%%% Create1d : 10 dec 2012
 %%% -------------------------------------------------------------------
 -module(boot_service_tests). 
    
@@ -10,7 +10,7 @@
 %% Include files
 %% --------------------------------------------------------------------
 -include_lib("eunit/include/eunit.hrl").
--include("common_macros.hrl").
+
 %% --------------------------------------------------------------------
 
 
@@ -45,8 +45,8 @@ cases_test()->
     ?debugMsg("check_loaded_services test"),    
     ?assertEqual(ok,?CHECK_LOADED_SERVICES),
 
-   % ?debugMsg("start boot_service"),    
- %   ?assertEqual(ok,start_session()),
+    ?debugMsg("test loader"),    
+    ?assertEqual(ok,loader_test:start()),
 
   %  ?debugMsg("tcp_client call test"),    
    % ?assertEqual(ok,tcp_client_call()),

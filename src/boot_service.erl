@@ -16,7 +16,14 @@
 %% Include files
 %% --------------------------------------------------------------------
 
+-ifdef(test).
+-define(DNS_INFO_FILE,"dns_test.info").
+-else.
+-define(DNS_INFO_FILE,"dns.info").
+-endif.
 
+-define(NUM_TRIES,10).
+-define(INTERVAL,30*1000).
 %% --------------------------------------------------------------------
  
 %% --------------------------------------------------------------------
@@ -112,6 +119,8 @@ stop_service(ServiceId)->
 %
 %% --------------------------------------------------------------------
 init([]) ->
+    {ok,DnsInfo}=file:consult(?DNS_INFO_FILE),
+    ok=lib_boot_service:connect_catalog(DnsInfo,?NUM_TRIES,?INTERVAL), %Crashes if no catalog is available
     case application:get_all_env() of
 	[]-> %% Normal worker
 	    ok;

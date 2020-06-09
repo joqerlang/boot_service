@@ -12,7 +12,11 @@
 -include_lib("eunit/include/eunit.hrl").
 
 %% --------------------------------------------------------------------
-
+-ifdef(test).
+-define(DNS_INFO_FILE,"dns_test.info").
+-else.
+-define(DNS_INFO_FILE,"dns.info").
+-endif.
 
 -ifdef(master).
 -define(CHECK_LOADED_SERVICES,check_loaded_services()).
@@ -36,7 +40,7 @@
 %% Returns: non
 %% --------------------------------------------------------------------
 start()->
-    spawn(fun()->eunit:test({timeout,10*60,boot_service}) end).
+    spawn(fun()->eunit:test({timeout,1*60,boot_service}) end).
 
 cases_test()->
     ?debugMsg("Test system setup"),
@@ -66,14 +70,18 @@ cases_test()->
 %% Returns: non
 %% --------------------------------------------------------------------
 setup()->
+    ?assertEqual({ok,"catalog_service"},loader_test:start_app("catalog_service")),
     ?assertEqual(ok,boot_service:boot()),
     ?assertMatch({pong,_,boot_service},boot_service:ping()),  
+ %   ?assertEqual(glurk,rpc:call(worker_boot_test@asus,catalog_service,ping,[])),
+%    {ok,DnsInfo}=file:consult(?DNS_INFO_FILE),
+ %   ?assertEqual(ok,lib_boot_service:connect_catalog(DnsInfo,1,50)),
     ok.
 
 check_loaded_services()->
-     ?assertMatch({pong,_,iaas_service},iaas_service:ping()),  
+    ?assertMatch({pong,_,iaas_service},iaas_service:ping()),  
      ?assertMatch({pong,_,catalog_service},catalog_service:ping()),  
-     ?assertMatch({pong,_,orchistrate_service},orchistrate_service:ping()),  
+    ?assertMatch({pong,_,orchistrate_service},orchistrate_service:ping()),  
     ok.
 
 

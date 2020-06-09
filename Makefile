@@ -1,9 +1,9 @@
 all:
-	rm -rf app_config catalog node_config  logfiles *_service include *~ */*~ */*/*~;
+	rm -rf *.info app_config catalog node_config  logfiles *_service include *~ */*~ */*/*~;
 	rm -rf */*.beam;
 	rm -rf *.beam erl_crash.dump */erl_crash.dump */*/erl_crash.dump;
 	cp src/*.app ebin;
-	erlc -I ../include -o ebin src/*.erl;
+	erlc -o ebin src/*.erl;
 doc_gen:
 	rm -rf  node_config logfiles doc/*;
 	erlc ../doc_gen.erl;
@@ -55,9 +55,12 @@ master:
 	erlc -D master -I /home/pi/erlang/erl_infra/include -o test_ebin test_src/*.erl;
 	erl -pa */ebin -pa ebin -pa test_ebin -boot_service num_services 3 -boot_service services orchistrate_serviceXcatalog_serviceXiaas_service -s boot_service_tests start -sname master_boot_test
 worker:
-	rm -rf *_service include ebin/* test_ebin/* test_src/*~ src/*~ erl_crasch.dump;
+	rm -rf *.info catalog *_service ebin/* test_ebin/* test_src/*~ src/*~ erl_crasch.dump;
+	git clone https://github.com/joqerlang/catalog.git;
+	cp catalog/dns_test.info .;
+	rm -rf catalog;
 	cp src/*.app ebin;
-	erlc -o ebin src/*.erl;	
+	erlc -D test -o  ebin src/*.erl;	
 #	test
-	erlc -D worker -o test_ebin test_src/*.erl;
+	erlc -D worker -D test -o test_ebin test_src/*.erl;
 	erl -pa */ebin -pa ebin -pa test_ebin -s boot_service_tests start -sname worker_boot_test

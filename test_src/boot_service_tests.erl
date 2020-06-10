@@ -49,6 +49,9 @@ cases_test()->
     ?debugMsg("check_loaded_services test"),    
     ?assertEqual(ok,?CHECK_LOADED_SERVICES),
 
+    ?debugMsg("local_dns_test"),
+    ?assertEqual(ok,local_dns_test:start()),
+
     ?debugMsg("test loader"),    
     ?assertEqual(ok,loader_test:start()),
 

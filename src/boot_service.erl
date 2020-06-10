@@ -4,7 +4,7 @@
 %%% 
 %%% Description boot_service
 %%% Make and start the board start SW.
-%%%  boot_service initiates tcp_server and listen on port
+%%%  boot_service initiates tcp_server and l0isten on port
 %%%  Then it's standby and waits for controller to detect the board and start to load applications
 %%% 
 %%%     
@@ -40,7 +40,7 @@
 %% External functions
 %% ====================================================================
 
-
+-export([dns_get/1,dns_all/0,dns_update/1]).
 %% server interface
 -export([boot/0,
 	 start_service/1,
@@ -62,6 +62,13 @@
 %% ====================================================================
 %% External functions
 %% ====================================================================
+dns_get(ServiceId)->
+    local_dns:get(ServiceId).
+dns_all()->
+    local_dns:all().
+dns_update(DnsInfo)->
+    local_dns:update(DnsInfo).
+
 
 boot()->
     application:start(?MODULE).
@@ -121,6 +128,7 @@ stop_service(ServiceId)->
 init([]) ->
     {ok,DnsInfo}=file:consult(?DNS_INFO_FILE),
     ok=lib_boot_service:connect_catalog(DnsInfo,?NUM_TRIES,?INTERVAL), %Crashes if no catalog is available
+    local_dns:init(),
     case application:get_all_env() of
 	[]-> %% Normal worker
 	    ok;

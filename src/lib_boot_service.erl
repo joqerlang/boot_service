@@ -32,7 +32,7 @@ try_connect(DnsInfo,NumTries,Interval,_)->
     R=case connect(DnsInfo,start) of
 	  ok->
 	      ok;
-	  error->
+	  _->
 	      timer:sleep(Interval),
 	      error
       end,

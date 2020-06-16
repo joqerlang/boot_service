@@ -126,9 +126,6 @@ stop_service(ServiceId)->
 %
 %% --------------------------------------------------------------------
 init([]) ->
-    {ok,DnsInfo}=file:consult(?DNS_INFO_FILE),
-    ok=lib_boot_service:connect_catalog(DnsInfo,?NUM_TRIES,?INTERVAL), %Crashes if no catalog is available
-    local_dns:init(),
     case application:get_all_env() of
 	[]-> %% Normal worker
 	    ok;
@@ -138,6 +135,11 @@ init([]) ->
 	    ServiceIdList=string:tokens(atom_to_list(ServicesAtom),"X"),
 	    [application:start(list_to_atom(ServiceId))||ServiceId<-ServiceIdList]
     end,
+    {ok,DnsInfo}=file:consult(?DNS_INFO_FILE),
+    local_dns:init(),
+    ok=lib_boot_service:connect_catalog(DnsInfo,?NUM_TRIES,?INTERVAL), %Crashes if no catalog is available
+
+
      
     {ok, #state{}}.
     

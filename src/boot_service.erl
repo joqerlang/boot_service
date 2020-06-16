@@ -128,16 +128,17 @@ stop_service(ServiceId)->
 init([]) ->
     case application:get_all_env() of
 	[]-> %% Normal worker
-	    ok;
+	    local_dns:init();
 	Env-> %% List of atoms! Makescript states the services to start
 	    {num_services,3}=lists:keyfind(num_services,1,Env),
 	    {services,ServicesAtom}=lists:keyfind(services,1,Env),
 	    ServiceIdList=string:tokens(atom_to_list(ServicesAtom),"X"),
-	    [application:start(list_to_atom(ServiceId))||ServiceId<-ServiceIdList]
+	    [application:start(list_to_atom(ServiceId))||ServiceId<-ServiceIdList],
+	    {ok,DnsInfo}=file:consult(?DNS_INFO_FILE),
+	    local_dns:init(),
+	    ok=lib_boot_service:connect_catalog(DnsInfo,?NUM_TRIES,?INTERVAL)
     end,
-    {ok,DnsInfo}=file:consult(?DNS_INFO_FILE),
-    local_dns:init(),
-    ok=lib_boot_service:connect_catalog(DnsInfo,?NUM_TRIES,?INTERVAL), %Crashes if no catalog is available
+ %Crashes if no catalog is available
 
 
      

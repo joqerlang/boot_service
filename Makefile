@@ -23,6 +23,9 @@ master:
 	git clone https://github.com/joqerlang/catalog.git;
 	cp catalog/dns_test.info .;
 	rm -rf catalog;
+	git clone https://github.com/joqerlang/app_config.git;
+	cp app_config/app.spec .;
+	rm -rf app_config;
 	git clone https://github.com/joqerlang/catalog_service.git;	
 	cp catalog_service/src/*.app catalog_service/ebin;
 	erlc -o catalog_service/ebin catalog_service/src/*.erl;

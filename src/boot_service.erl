@@ -66,8 +66,7 @@ dns_get(ServiceId)->
     local_dns:get(ServiceId).
 dns_all()->
     local_dns:all().
-dns_update(DnsInfo)->
-    local_dns:update(DnsInfo).
+
 
 
 boot()->
@@ -105,6 +104,9 @@ start_service(ServiceId)->
 stop_service(ServiceId)->    
     gen_server:call(?MODULE,{stop_service,ServiceId},infinity).
 
+
+dns_update(DnsInfo)->
+    gen_server:cast(?MODULE,{dns_update,DnsInfo}).
     
 %%___________________________________________________________________
 
@@ -186,7 +188,9 @@ handle_call(Request, From, State) ->
 %%          {noreply, State, Timeout} |
 %%          {stop, Reason, State}            (terminate/2 is called)
 %% --------------------------------------------------------------------
-
+handle_cast({dns_update,DnsInfo}, State) ->
+    ok=local_dns:update(DnsInfo),
+    {noreply, State};
 
 handle_cast(Msg, State) ->
     io:format("unmatched match cast ~p~n",[{?MODULE,?LINE,Msg}]),

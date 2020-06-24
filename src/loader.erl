@@ -13,7 +13,7 @@
 %% --------------------------------------------------------------------
 
 %% External exports
--export([start/2,stop/1
+-export([start/3,stop/1
 	]).
 	 
 
@@ -21,8 +21,7 @@
 %% ====================================================================
 %% External functions
 %% ====================================================================
-start(ServiceId,GitUrl)->
-    
+start(ServiceId,git,GitUrl)->
     Result=case [ServiceId||{Application,_,_}<-application:loaded_applications(),
 			    list_to_atom(ServiceId)==Application] of
 	       []->
@@ -36,7 +35,7 @@ start(ServiceId,GitUrl)->
 		   {error,Err}
 	   end,
     Result.
-
+ 
 stop(ServiceId)->
     EbinDir=filename:join(ServiceId,"ebin"),
     application:stop(list_to_atom(ServiceId)),

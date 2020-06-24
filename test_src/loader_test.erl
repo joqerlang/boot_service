@@ -19,7 +19,7 @@
 %% External functions
 %% ====================================================================
 start_app(ServiceId)->
-    loader:start(ServiceId,?GIT_URL).
+    loader:start(ServiceId,git,?GIT_URL).
 
 % --------------------------------------------------------------------
 %% Function:start/0 
@@ -46,19 +46,19 @@ start()->
 
 one_service()->
     ServiceId="adder_service",
-    ?assertEqual({ok,ServiceId},loader:start(ServiceId,?GIT_URL)),
+    ?assertEqual({ok,ServiceId},loader:start(ServiceId,git,?GIT_URL)),
     ?assertEqual(42,adder:add(20,22)),
     ok.
 
 second_service()->
     ServiceId="multi_service",
-    ?assertEqual({ok,ServiceId},loader:start(ServiceId,?GIT_URL)),
+    ?assertEqual({ok,ServiceId},loader:start(ServiceId,git,?GIT_URL)),
     ?assertEqual(420,multi:multi(42,10)),
     ok.
 
 try_start_first_again()->
     ServiceId="adder_service",
-    ?assertEqual({error,["adder_service"]},loader:start(ServiceId,?GIT_URL)),
+    ?assertEqual({error,["adder_service"]},loader:start(ServiceId,git,?GIT_URL)),
     ?assertEqual(42,adder_service:add(20,22)),
     ok.	 
 
@@ -72,5 +72,5 @@ stop_services()->
     ok.
     
 start_non_existing()->
-    ?assertMatch({badrpc,_},rpc:call(node(),loader,start,["glurk",?GIT_URL])),
+    ?assertMatch({badrpc,_},rpc:call(node(),loader,start,["glurk",git,?GIT_URL])),
     ok.
